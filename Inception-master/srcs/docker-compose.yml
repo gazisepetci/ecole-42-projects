@@ -1,0 +1,66 @@
+version: '3'
+
+networks:
+  docker-network:
+    driver: bridge
+
+volumes:
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/wordpress
+
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/mariadb
+
+services:
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    ports:
+      - 443:443
+    depends_on:
+      - wordpress
+    restart: unless-stopped

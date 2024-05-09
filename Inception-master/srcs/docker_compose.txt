@@ -1,0 +1,280 @@
+#https://kerteriz.net/docker-compose-nedir/
+#Docker Compose, 
+#yapılandırma dosyası olarak yaml formatını kullanır. 
+#Bu yapılandırma dosyası, Docker container'larının nasıl oluşturulacağını ve nasıl yönetileceğini belirtir. 
+#Bu yapılandırma dosyası, satır satır yapılandırma komutlarından oluşur ve her komut bir container oluşturmak, 
+#container içerisinde bir komut çalıştırmak gibi bir işlemi gerçekleştirir.
+
+#version: '3'
+#
+#services:
+#  web:               web adlı container oluşturacak
+#    build: .         
+#    ports:           
+#      - "8000:8000"  bu container'ın 8000. portundan erişilebileceğini belirtmektedir
+#    volumes:         
+#      - .:/app       Ayrıca, container içerisinde çalışan uygulamanın kodları host makinede bulunan app dizinine bağlanacaktır. Bu sayede, host makinede bulunan uygulamanın kodları container içerisinde de güncellenebilir.
+
+#-----------------------------------------------------------------------------------
+
+#Docker Compose dosyası 4 ana bileşenden oluşur. Bunlar şu şekildedir;
+#
+#version: Compose dosyasının hangi compose sürümünü kullandığını belirtir. Her sürüm kendine ait özellikler ve yeni geliştirmeler içerebilir.
+#Tüm sürümleri ve detayları için https://docs.docker.com/compose/compose-file/compose-versioning/ adresini ziyaret edebilirsiniz.
+#services: Projenizdeki tüm container'ları tanımlar. Her container için bir isim ve build veya image komutları gerekir.
+#volumes: Container'ların veri kaynaklarını tanımlar. Bu, verilerin container'lar arasında paylaşılmasını veya saklanmasını sağlar.
+#networks: Container'lar arasındaki ağ bağlantılarını tanımlar.
+#Bu dört ana bileşenden oluşan bir Docker Compose dosyası örneği verelim:
+
+#
+#version: '3.8'
+#services:
+#  web:
+#    image: nginx:latest                    web hizmeti, en son nginx sürümünü kullanarak container'ları oluşturur
+#    ports:
+#      - "80:80"
+#    networks:
+#      - my-network
+#  db:
+#    image: postgres:13                     db hizmeti postgresql 13 sürümünü kullanarak container'ları oluşturur
+#    environment:
+#      - POSTGRES_USER=myuser
+#      - POSTGRES_PASSWORD=mypassword
+#      - POSTGRES_DB=mydb
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#    networks:
+#      - my-network
+#volumes:
+#  db-data:                                 ortam değişkenlerini tanımlar ve verileri saklamak için bir volume tanımlar.
+#networks:
+#  my-network:
+#    driver: bridge
+
+#-----------------------------------------------------------------------------------
+
+#Docker compose dosyasında kullanabileceğiniz diğer parametrelerden bazıları şunlardır:
+#environment: Container'lar için ortam değişkenlerini tanımlar.
+#depends_on: Container'lar arasındaki bağımlılıkları tanımlar.
+#extends : Ayrı ayrı tanımlanmış olan containerların ortak olan ayarlarını kullanmak için kullanılabilir.
+#ports : Containerların host makineye açacağı portlar tanımlanabilir.
+#restart : Containerların nasıl yeniden başlatılacağını tanımlanabilir.
+#command : Containerların başlatılırken çalıştırılması gereken komutlar tanımlanabilir.
+#labels : Containerların etiketleri tanımlanabilir.
+#tmpfs : Containerların tmpfs kullanmasının yapılandırılmasını yapabilirsiniz.
+#build: Container'ların nasıl oluşturulduğunu tanımlar. Bu, bir Dockerfile kullanarak container'ların nasıl oluşturulduğunu belirten bir dizin belirtmenizi sağlar.
+#cap_add: Container'lar için ekstra yetkiler tanımlar.
+#cap_drop: Container'lar için yetkileri kaldırır.
+#cgroup_parent: Container'ların cgroup parent'ını tanımlar.
+#devices: Container'ların host makineye erişebileceği aygıtları tanımlar.
+#dns: Container'ların DNS sunucularını tanımlar.
+#dns_search: Container'ların DNS arama alanlarını tanımlar.
+#entrypoint:Container'ların giriş noktasını tanımlar. Bu, container'ların nasıl çalıştırılacağını belirler ve komut satırından verilen komutları etkilemez.
+#env_file: Container'lar için ortam değişkenlerinin yer aldığı bir dosya tanımlar.
+#expose: Container'ların açtığı portları belirtir, ancak host makineye açılmaz.
+#external_links: Container'lar için harici linkler tanımlar.
+#extra_hosts: Container'lar için ekstra DNS girişlerini tanımlar.
+#logging: Container'lar için günlükleme ayarlarını tanımlar.
+#ulimits: Container'lar için sistem kaynak sınırlarını tanımlar.
+#user: Container'lar için çalıştırılacak kullanıcıyı tanımlar.
+#Yukarıdaki parametreleri içeren daha karmaşık bir docker compose dosyası hazırlayalım:
+#
+#version: '3.7'                                         docker versiyonu
+#services:                                              Konteynırlar
+#  web:
+#    build: .                                           Container'ların nasıl oluşturulduğunu tanımlar. Bu, bir Dockerfile kullanarak container'ların nasıl oluşturulduğunu belirten bir dizin belirtmenizi sağlar.
+#    cap_add:                                           Container'lar için ekstra yetkiler tanımlar.
+#      - NET_ADMIN
+#    cap_drop:                                          Container'lar için yetkileri kaldırır.
+#      - ALL
+#    cgroup_parent: my-cgroup                           Container'ların cgroup parent'ını tanımlar.
+#    devices:                                           Container'ların host makineye erişebileceği aygıtları tanımlar.
+#      - "/dev/snd:/dev/snd"
+#    dns:                                               Container'ların DNS sunucularını tanımlar.
+#      - 8.8.8.8
+#      - 8.8.4.4
+#    dns_search:                                        Container'ların DNS arama alanlarını tanımlar.
+#      - example.com
+#    env_file:                                          Container'lar için ortam değişkenlerinin yer aldığı bir dosya tanımlar.
+#      - web-variables.env
+#    entrypoint: /usr/local/bin/web-entrypoint          Container'ların giriş noktasını tanımlar. Bu, container'ların nasıl çalıştırılacağını belirler ve komut satırından verilen komutları etkilemez.
+#    expose:                                            Container'ların açtığı portları belirtir, ancak host makineye açılmaz.
+#      - "80"
+#      - "443"
+#    external_links:                                    Container'lar için harici linkler tanımlar.
+#      - redis-server:redis
+#    extra_hosts:                                       Container'lar için ekstra DNS girişlerini tanımlar.
+#      - "somehost:162.242.195.82"
+#    logging:                                           Container'lar için günlükleme ayarlarını tanımlar.
+#      driver: json-file
+#      options:
+#        max-size: "200k"
+#        max-file: "10"
+#    ulimits:                                           Container'lar için sistem kaynak sınırlarını tanımlar.
+#      nproc: 65535
+#      nofile:
+#        soft: 20000
+#        hard: 40000
+#    user: "1000:1000"                                  Container'lar için çalıştırılacak kullanıcıyı tanımlar.
+#  db:
+#    image: postgres:13
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#volumes:
+#  db-data:
+
+#-----------------------------------------------------------------------------------
+
+#-Docker Compose Nasıl Çalıştırılır?
+#çalıştırmak için aşağıdaki adımları izleyebilirsiniz:
+#
+#docker-compose.yml dosyasının bulunduğu dizine gidin.
+#docker compose up komutunu çalıştırın. Bu komut, docker-compose.yml dosyasındaki yapılandırma komutlarını kullanarak container, network ve volume'ları oluşturacaktır.
+#Eğer dosya adınız docker-compose.yml değilse, -f parametresi ile dosya adınızı belirtin. Örneğin docker compose -f file_name.yaml up
+#docker ps veya docker container ls komutunu çalıştırarak oluşturulan container'ı görebilirsiniz.
+#docker volume ls komutunu çalıştırarak oluşturulan volume'u görebilirsiniz.
+#docker network ls komutunu çalıştırarak oluşturulan network'leri görebilirsiniz.
+#
+#docker compose up komutu sonrası tüm loglar ekrana basılır. Ctrl+C ile çıkmak ise compose içinde yer alan tüm servisleri durdurur. Compose'u arka planda çalıştırmak için -d parametresi ile docker compose -d up komutunu kullanabilirsiniz.
+#-Docker Compose Nasıl Durdurulur?
+#Docker compose ile servisleriniz çalışmaya başladıktan sonra tüm servisleri durdurmak için aşağıdaki yöntemleri izleyebilirsiniz.
+#
+#Eğer docker compose up komutunu kullandıysanız, aynı terminalde Ctrl+C komutu ile
+#Eğer docker compose up komutunu kullandıysanız, farklı bir terminalde docker compose down komutu ile
+
+#-----------------------------------------------------------------------------------
+
+version: '3'
+
+networks:
+  docker-network:
+    driver: bridge
+
+volumes:
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $HOME/data/wordpress
+
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $HOME/data/mariadb
+
+services:
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - db_data:/var/lib/mysql
+      #container bilgi kaydetmez, durdurulduğunda üzerindeki bilgiler gider. Bilgilerin kaybolmaması için volumes ile nereye kaydetmesi gerektiği belirtilir.
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    depends_on:
+      - mariadb
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx/
+      dockerfile: Dockerfile
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    ports:
+      - 443:443
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+#____________________________________________________________________________V
+version: '3'    // docker versiyonu
+
+networks:
+  docker-network:
+    driver: bridge    //konteynırlar arasında köprü şeklinde bağlantı kurar(bridge, host, none)
+
+volumes:
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none    //özel depolama seçeneği
+      o: bind    //bind=bağlamak, o=options, dosyalamanın bağlı olacağı belirtilir.
+      device: /home/${USER}/data/wordpress
+
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/${USER}/data/mariadb
+
+services:    //Konteynırlar
+  mariadb:
+    container_name: mariadb    //isim vermeyince rastgele atıyor.
+    build:    //konteynırın build edileceği dosya.
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    env_file:    //env değişkenlerin çekileceği yer. enviroment olarak tek tek burada belirtilebilir.
+      - ./.env
+    volumes:    //konteynır sonlandırıldığında veriler kaybolur. Verinin kaydedileceği yer.
+      - db_data:/var/lib/mysql    //db_data yı /var/lib/mysql e yönlendirir.
+    networks:    //konteynırlar için ağ bağlantısı, aynı adlarda aynı ağ altında olur.
+      - docker-network
+    restart: unless-stopped    //konteynır çöktüğünde yeniden başlaması, kullanıcı durdurduğunda sonlanması için.
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    depends_on:    //önce mariadb'nin oluşturulması beklenir.
+      - mariadb
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    restart: unless-stopped
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx/
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - docker-network
+    ports:
+      - 443:443    //docker'ın 443 portu nginx'in 443 portuna bağlanır.
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+
+#____________________________________________________________________________^

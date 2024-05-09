@@ -1,0 +1,3 @@
+﻿The command '/bin/sh -c service mysql start && mysql < /var/www/initial_db.sql && rm -f /var/www/initial_db.sql;' returned a non-zero code: 1
+ERROR: Service 'mariadb' failed to build : Build failed
+make: *** [Makefile:7: all] Error 1

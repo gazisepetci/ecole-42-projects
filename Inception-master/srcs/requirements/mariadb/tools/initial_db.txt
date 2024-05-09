@@ -1,0 +1,11 @@
+--SQL komutları, WordPress için bir veritabanı oluşturur. Yeni bir kullanıcı eklemeyi, kullanıcıya gerekli yetkileri vermeyi ve şifre değişikliği yapmayı sağlar. 
+--wordpress adında yeni bir veritabanı oluşturur.
+CREATE DATABASE IF NOT EXISTS wordpress;
+--uercan adında ve şifresi 1234 olarak yeni kullanıcı oluşturur.
+CREATE USER IF NOT EXISTS 'uercan'@'%' IDENTIFIED BY '1234';
+--uercan kullanıcısına wordpress DB üzerinde tüm yetkileri verir.
+GRANT ALL PRIVILEGES ON wordpress.* TO 'uercan'@'%';
+--Sunucu tablosunu yeniler, değişiklikler anında aktif olur.
+FLUSH PRIVILEGES;
+--root kullanıcısının şifresini root1234 olarak değiştirir.
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'root1234';

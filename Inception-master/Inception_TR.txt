@@ -1,0 +1,145 @@
+giriş
+Bu proje, Docker'ı kullanarak sistem yönetimi bilginizi genişletmeyi amaçlamaktadır.
+Birkaç Docker görüntüsünü sanallaştıracak ve bunları yeni kişisel sanal makinenizde oluşturacaksınız.
+
+Genel kurallar
+• Bu projenin bir Sanal Makine üzerinde yapılması gerekmektedir.
+• Projenizin konfigürasyonu için gerekli tüm dosyalar bir srcs klasörüne yerleştirilmelidir.
+• Bir Makefile de gereklidir ve dizininizin kök dizininde yer almalıdır.
+Tüm uygulamanızı kurması gerekir (yani, docker-compose.yml kullanarak Docker görüntülerini oluşturması gerekir).
+• Bu konu, altyapınıza bağlı olarak henüz öğrenmemiş olabileceğiniz kavramları uygulamaya koymayı gerektirir.
+Bu nedenle, bu ödevi tamamlamak için Docker kullanımıyla ilgili birçok belgeyi ve yararlı bulacağınız diğer her şeyi okumaktan çekinmemenizi öneririz..
+
+Zorunlu kısım
+Bu proje, belirli kurallar altında farklı hizmetlerden oluşan küçük bir altyapı kurmanızı içerir.
+Tüm proje sanal bir makinede yapılmalıdır.
+Docker compose'u kullanmalısınız.
+Her Docker görüntüsü, karşılık gelen hizmetiyle aynı ada sahip olmalıdır.
+Her hizmetin özel bir kapsayıcıda çalışması gerekir.
+Performansla ilgili hususlar için, kaplar Alpine veya Debian'ın sondan bir önceki kararlı sürümünden oluşturulmalıdır. Seçim senin.
+Ayrıca hizmet başına bir tane olmak üzere kendi Docker dosyalarınızı da yazmanız gerekir. Dockerfiles, docker-compose.yml dosyanızda Makefile tarafından çağrılmalıdır.
+Bu, projenizin Docker görüntülerini kendiniz oluşturmanız gerektiği anlamına gelir.
+Bu durumda, hazır Docker görüntülerini çekmek ve DockerHub gibi hizmetleri kullanmak yasaktır (Alpine/Debian bu kuralın dışındadır).
+Ardından şunları ayarlamanız gerekir:
+• Yalnızca TLSv1.2 veya TLSv1.3 ile NGINX içeren bir Docker kapsayıcısı.
+• Yalnızca nginx olmadan WordPress + php-fpm içeren (kurulması ve yapılandırılması gerekir) bir Docker kabı.
+• Yalnızca nginx olmadan MariaDB içeren bir Docker kapsayıcısı.
+• WordPress veritabanınızı içeren bir cilt.
+• WordPress web sitesi dosyalarınızı içeren ikinci bir cilt.
+• Konteynerleriniz arasında bağlantı kuran bir liman işçisi ağı.
+Bir çökme durumunda kapsayıcılarınızın yeniden başlatılması gerekir.
+
+-i-
+Docker kapsayıcı bir sanal makine değildir.
+Bu nedenle, çalıştırmaya çalışırken 'tail -f' ve benzeri temelli herhangi bir hileli yama kullanılması önerilmez.
+Arka plan programlarının nasıl çalıştığı ve bunları kullanmanın iyi bir fikir olup olmadığı hakkında bilgi edinin.
+
+-!-
+Elbette, network: host veya --link veya links: kullanmak yasaktır.
+Ağ hattı, docker-compose.yml dosyanızda bulunmalıdır.
+Kapsayıcılarınız sonsuz döngü çalıştıran bir komutla başlatılmamalıdır.
+Dolayısıyla bu, giriş noktası olarak kullanılan veya giriş noktası betiklerinde kullanılan herhangi bir komut için de geçerlidir.
+Aşağıdakiler yasaklanmış birkaç hileli yamadır: tail -f, bash, sleep infinity, true iken.
+
+-i-
+PID 1 ve Dockerfiles yazmaya yönelik en iyi uygulamalar hakkında bilgi edinin.
+
+• WordPress veritabanınızda biri yönetici olmak üzere iki kullanıcı bulunmalıdır.
+Yöneticinin kullanıcı adı, admin/Admin veya administrator/Administrator içeremez (ör. admin, administrator, Administrator, admin-123 ve
+vb.)
+
+-i-
+Birimleriniz, Docker kullanan ana makinenin /home/login/data klasöründe bulunacaktır.
+Tabii ki, oturum açma bilgilerini sizinkiyle değiştirmelisiniz.
+
+İşleri kolaylaştırmak için, alan adınızı yerel IP adresinizi gösterecek şekilde yapılandırmanız gerekir.
+Bu alan adı login.42.fr olmalıdır. Yine, kendi oturum açma bilgilerinizi kullanmalısınız.
+Örneğin, oturum açma bilgileriniz wil ise wil.42.fr, wil'in web sitesine işaret eden IP adresine yönlendirecektir.
+
+-!-
+En son etiket yasaktır.
+Docker dosyalarınızda parola bulunmamalıdır.
+Ortam değişkenlerini kullanmak zorunludur.
+Ayrıca, ortam değişkenlerini depolamak için bir .env dosyası kullanılması kesinlikle önerilir.
+.env dosyası srcs dizininin kökünde bulunmalıdır.
+NGINX kapsayıcınız, TLSv1.2 veya TLSv1.3 protokolünü kullanarak yalnızca 443 numaralı bağlantı noktası üzerinden altyapınıza tek giriş noktası olmalıdır.
+
+Beklenen dizin yapısının bir örneği aşağıdadır:
+$> ls -alR
+total XX
+drwxrwxr-x 3 wil wil 4096 avril 42 20:42 .
+drwxrwxrwt 17 wil wil 4096 avril 42 20:42 ..
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 Makefile
+drwxrwxr-x 3 wil wil 4096 avril 42 20:42 srcs
+./srcs:
+total XX
+drwxrwxr-x 3 wil wil 4096 avril 42 20:42 .
+drwxrwxr-x 3 wil wil 4096 avril 42 20:42 ..
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 docker-compose.yml
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 .env
+drwxrwxr-x 5 wil wil 4096 avril 42 20:42 requirements
+./srcs/requirements:
+total XX
+drwxrwxr-x 5 wil wil 4096 avril 42 20:42 .
+drwxrwxr-x 3 wil wil 4096 avril 42 20:42 ..
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 bonus
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 mariadb
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 nginx
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 tools
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 wordpress
+./srcs/requirements/mariadb:
+total XX
+drwxrwxr-x 4 wil wil 4096 avril 42 20:45 .
+drwxrwxr-x 5 wil wil 4096 avril 42 20:42 ..
+drwxrwxr-x 2 wil wil 4096 avril 42 20:42 conf
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 Dockerfile
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 .dockerignore
+drwxrwxr-x 2 wil wil 4096 avril 42 20:42 tools
+[...]
+./srcs/requirements/nginx:
+total XX
+drwxrwxr-x 4 wil wil 4096 avril 42 20:42 .
+drwxrwxr-x 5 wil wil 4096 avril 42 20:42 ..
+drwxrwxr-x 2 wil wil 4096 avril 42 20:42 conf
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 Dockerfile
+-rw-rw-r-- 1 wil wil XXXX avril 42 20:42 .dockerignore
+drwxrwxr-x 2 wil wil 4096 avril 42 20:42 tools
+[...]
+$> cat srcs/.env
+DOMAIN_NAME=wil.42.fr
+# certificates
+CERTS_=./XXXXXXXXXXXX
+# MYSQL SETUP
+MYSQL_ROOT_PASSWORD=XXXXXXXXXXXX
+MYSQL_USER=XXXXXXXXXXXX
+MYSQL_PASSWORD=XXXXXXXXXXXX
+[...]
+$>
+
+-!-
+Bariz güvenlik nedenleriyle, tüm kimlik bilgileri, API anahtarları, env değişkenleri vb... yerel olarak bir .env dosyasına kaydedilmeli ve git tarafından yoksayılmalıdır.
+Herkese açık olarak saklanan kimlik bilgileri, sizi doğrudan projenin başarısızlığına yönlendirecektir.
+
+
+
+-Bonus kısım-
+Bu proje için bonus kısmının basit olması hedeflenmiştir.
+Her ekstra hizmet için bir Dockerfile yazılmalıdır.
+Böylece her biri kendi kabının içinde çalışacak ve gerekirse ayrılmış hacmine sahip olacaktır.
+
+Bonus listesi:
+• Önbelleği düzgün bir şekilde yönetmek için WordPress web siteniz için redis önbelleğini kurun.
+• WordPress web sitenizin hacmine işaret eden bir FTP sunucusu kabı kurun.
+• PHP dışında seçtiğiniz dilde basit bir statik web sitesi oluşturun (Evet, PHP hariç!).
+Örneğin, bir vitrin sitesi veya özgeçmişinizi sunmak için bir site.
+• Yöneticiyi kurun.
+• Yararlı olduğunu düşündüğünüz, seçtiğiniz bir hizmeti kurun.
+Savunma sırasında seçiminizi gerekçelendirmeniz gerekecek.
+-i-
+Bonus bölümünü tamamlamak için ekstra hizmetler kurma olanağına sahipsiniz.
+Bu durumda ihtiyacınıza göre daha fazla port açabilirsiniz.
+
+-!-
+Bonus kısım, yalnızca zorunlu kısım MÜKEMMEL ise değerlendirilecektir.
+Kusursuz demek, zorunlu olan kısım bütün olarak yapılmış ve arızasız çalışıyor demektir.
+TÜM zorunlu gereksinimleri geçmediyseniz, bonus bölümünüz hiç değerlendirilmeyecektir.
