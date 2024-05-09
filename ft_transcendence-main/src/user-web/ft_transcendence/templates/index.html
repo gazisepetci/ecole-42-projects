@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Index{% endblock %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+
+<div class="container-lg">
+  {% if messages %}
+  <div class="row p-1">
+    {% include 'messages_dismissible.html' %}
+  </div>
+  {% endif %}
+  <div class="row p-3 justify-content-center overflow-auto" style="min-height:70vh;" id="main-content">
+
+  
+  
+  </div>
+</div>
+
+{% endblock %}

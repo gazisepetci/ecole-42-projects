@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xl-6">
+      <div class="card p-4 bg-transparent" id="loginCard">
+        <div class="card-body">
+          <form action="{% url 'user:login' %}" method="POST" id="login-form">
+            <h2 class="mb-5">Login</h2>
+            {% csrf_token %}
+			{{ form }}
+            <button
+              type="submit"
+              class="btn btn-full btn-dark mb-4"
+              id="loginSubmitButton"
+            >
+              Login
+            </button>
+          </form>
+
+          {% include 'messages.html' %}
+
+          <div class="sign-link31 m-0">
+            <p>
+              Don't have an account?
+              <a
+                href="{% url 'user:register' %}"
+                class="register-link31"
+                id="registerLink"
+              >
+                Register
+              </a>
+            </p>
+            <p>
+              Test
+              <a
+                href="{% url 'user:two-factor' %}"
+                class="register-link31"
+                id="2FALink"
+              >
+                2FA Auth
+              </a>
+            </p>
+          </div>
+          {% load static %}
+          <div class="text-center">
+            <img
+              src="{% static '42_Logo.png' %}"
+              alt="OAuth Login"
+              class="oauth-logo"
+              style="cursor: pointer"
+              id="42LoginLink"
+            />
+          </div>
+          <div id="form_error"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'eoc.html' %}

@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-xl-6">
+      <div class="card p-4 bg-transparent" id="registerCard">
+        <div class="card-body">
+          <form action="{% url 'user:register' %}" method="POST" id="register-form">
+            <h2 class="mb-5">Register</h2>
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" class="btn btn-full btn-dark mb-4" id="registerSubmitButton">
+              Register
+            </button>
+          </form>
+          
+          {% include 'messages.html' %}
+
+          <div class="sign-link31 m-0">
+            <p>
+              You have already an account?
+              <a href="{% url 'user:login' %}" class="register-link31" id="loginLink">Sign in</a>
+            </p>
+          </div>
+          <div id="form_error"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'eoc.html' %}

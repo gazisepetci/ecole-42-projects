@@ -1,0 +1,37 @@
+{% include 'messages_dismissible.html' %}
+
+<div
+  class="d-flex justify-content-center position-relative"
+  style="height: 100vh"
+>
+  <div
+    class="position-absolute"
+    style="
+      left: 50%;
+      top: 50%;
+      transform: translate(-85%, -50%);
+      border: 3px solid black;
+      border-radius: 4px;
+      box-shadow: 0 0 75px #fafafa;
+    "
+  >
+
+  <canvas id="pongCanvas" width="800" height="400"></canvas>
+  </div>
+
+  <div
+    class="position-absolute"
+    style="
+      left: 50%;
+      top: 50%;
+      transform: translate(500%, -50%);
+      border: 3px solid black;
+      border-radius: 4px;
+      box-shadow: 0 0 75px #fafafa;
+      display: none;
+    "
+    id="chatCard"
+  >
+    <img src="" width="425" height="750" alt="Chat Content" />
+  </div>
+</div>

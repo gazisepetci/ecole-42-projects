@@ -1,0 +1,36 @@
+{% for field in form %}
+<div class="form-floating mb-4">
+  <input
+    class="form-control bg-transparent text-white"
+    id="{{ field.id_for_label }}"
+    name="{{ field.name }}"
+    type="{{ field.field.widget.input_type }}"
+    {%
+    if
+    field.value
+    %}value="{{ field.value }}"
+    {%
+    endif
+    %}
+    {%
+    if
+    field.field.required
+    %}required=""
+    {%
+    endif
+    %}
+    placeholder=" "
+  />
+
+  <label class="form-label" for="{{ field.id_for_label }}">
+    {% if field.id_for_label == 'id_username' %}
+    <i class="bi bi-person-fill"></i>
+    {% elif field.id_for_label == 'id_email' %}
+    <i class="bi bi-envelope-fill"></i>
+    {% else %}
+    <i class="bi bi-lock-fill"></i>
+    {% endif %} {{ field.label }}</label
+  >
+  {{ field.errors }}
+</div>
+{% endfor %}

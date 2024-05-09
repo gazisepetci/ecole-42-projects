@@ -1,0 +1,52 @@
+Ortodoks kanonik sınıf formu
+
+class A
+{
+   public:
+      A ();
+      A (const A &a);
+      ~A ();
+      A & operator = (const A &a);
+};
+
+-varsayılan kurucu
+-Yapıcıyı kopyala
+-yok edici
+-Atama operatörünü kopyala
+
+Formlar okunurluğu kolaylaştırır. Ortodoks kanonik sınıf formu (OCF) özellikle kopyalama operatörü ve olası başka operatörlerin overload
+(aşırı yükleme - kendi kuralımızı ekleme) durumları için kullanılır.
+Böylece ileride olası kullanımlar önceden hazırlanır. 
+(Örn memory için yapılan bir programda üçlü kural formu kullanılır, ileride kullanılacak bellek yönetim fonksiyonları önceden hazırlanır,- sonra program yazılmaya başlanır.)
+
+
+Kayan nokta temsilleri makineden makineye değişir. En yaygın kullanılanlardan biri: IEEE-754 standardıdır.
+
+32 bit (64 bit için 64 bitlik kullanılır)
+seeeeeeeemmmmmmmmmmmmmmmmmmmmmmm    meaning
+31                              0    bit #
+
+s = sign bit, e = exponent(üs), m = mantissa (logaritmanın ondalık kısmı)
+
+number = (sign ? -1:1) * 2^(exponent) * 1.(mantissa bits)
+
+Float sayılarda ondalık kısım tam olarak binary olmadığı için bu standart ve yöntem kullanılır. Örn 5,3 için tam kısım 00000101 olur ve ondalık kısım için 2 üzeri negative doğru gider.
+Bu durumda 5,3 için:
+
+
+	5 için                                       0.3 ondalık kısım için
+
+	2^7|2^6|2^5|2^4|2^3|2^2|2^1|2^0         ,   2^-1|2^-2|2^-3|2^-4|2^-5|2^-6|2^-7|2^8    ......
+	128|64 | 32|16 |8  |4  |2  |1                0.5. 0.25. 0.125.  0.0625 0.03125 0.015625
+
+Binary	0   0    0   0  0  1   0    1.                01001100110011001101
+
+00000101.0100110011001100110011001100110011001...
+
+Çıkan sonuç tekrar çevrildiğinde ondalık kısım 0.29999999999999'a denk geliyor (ondalık kısımda hep 1001 yani 9 tekrar eder) yani 5.3,  5.299999999999999 olarak çıkıyor.
+Bunu önlemek için kayan noktalı sayıda (float) IEEE-754 standartı kullanılıyor. Ancak buda gerçek sayıya göre çok daha sınırlandırılmış oluyor.
+Örn: sonsuza giden sayılarda standarda göre belirli bir bitte kadar saklanır (32 bit sistem için 32 bit, 64 için 64 bitlik bir şekilde saklanır.)
+
+Fixed point ise bir sayıyı int olarak istenilen kadar saklıyor. böylece scale 1000 ise float değer scale ile çarpılıp saklanır, ondalık kısmı tam sayıya çevrildiği için kaybolur.
+Kullanılmak istenildiğinde scale ile bölünerek çıkan sonuç kullanılır. Kaybolan kısımlar olduğu için çıkan sonuç bizim istediğimiz kadar basamağa sahip olmuş olur (çünkü scale değerini biz belirliyoruz.)
+

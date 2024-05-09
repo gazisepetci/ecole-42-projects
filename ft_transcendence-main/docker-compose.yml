@@ -1,0 +1,111 @@
+services:
+  user-db:
+    image: postgres
+    restart: always
+    volumes:
+      - user-postgres:/var/lib/postgresql/data
+    env_file:
+      - envfiles/postgres.env
+    healthcheck:
+      test: "/usr/bin/pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB -h user-db"
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  user-web:
+    build: src/user-web
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py collectstatic --no-input &&
+             gunicorn -b '0.0.0.0:8002' ft_transcendence.wsgi"
+    volumes:
+      - user-static:/code/staticfiles
+      - user-media:/code/media
+    expose:
+      - "8002"
+    depends_on:
+      user-db:
+          condition: service_healthy
+    env_file:
+      - envfiles/postgres.env
+      - envfiles/web-global.env
+      - envfiles/user-web.env
+
+  user-nginx:
+    build: src/user-web/nginx
+    restart: always
+    volumes:
+      - user-static:/data/static
+      - user-media:/data/media
+    expose:
+      - "8001"
+    depends_on:
+      - user-web
+
+  chat-redis:
+    image: redis:7
+    restart: always
+    expose:
+      - "6379"
+
+  chat-web:
+    build: src/chat-web
+    command: >
+      sh -c "daphne -b 0.0.0.0 -p 8002 chat.asgi:application"
+    expose:
+      - "8002"
+    depends_on:
+      - chat-redis
+    env_file:
+      - envfiles/web-global.env
+      - envfiles/chat-web.env
+
+  chat-nginx:
+    build: src/chat-web/nginx
+    restart: always
+    expose:
+      - "8001"
+    depends_on:
+      - chat-web
+
+  game-redis:
+    image: redis:7
+    restart: always
+    expose:
+      - "6379"
+
+  game-web:
+    build: src/game-web
+    command: >
+      sh -c "daphne -b 0.0.0.0 -p 8002 games.asgi:application"
+    expose:
+      - "8002"
+    depends_on:
+      - game-redis
+    env_file:
+      - envfiles/web-global.env
+      - envfiles/game-web.env
+
+  game-nginx:
+    build: src/game-web/nginx
+    restart: always
+    expose:
+      - "8001"
+    depends_on:
+      - game-web
+
+  master-nginx:
+    build: src/nginx
+    restart: always
+    ports:
+      - "3600:8000"
+    depends_on:
+      - user-nginx
+      - game-nginx
+      - chat-nginx
+
+volumes:
+  user-postgres:
+  user-static:
+  user-media:

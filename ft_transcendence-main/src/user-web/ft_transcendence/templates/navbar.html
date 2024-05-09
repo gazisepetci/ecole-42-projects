@@ -1,0 +1,62 @@
+<div>
+  <div class="container-lg">
+    <nav class="navbar navbar-expand-lg navbar-custom2 shadow navbar-dark my-4">
+      <div class="container-fluid">
+        <a href="/" class="navbar-brand h1 mb-0">TRANSCENDENCE</a>
+        <button
+          class="navbar-toggler ms-auto"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+          aria-controls="navbarContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-between"
+          id="navbarContent"
+        >
+          <ul class="navbar-nav text-center mx-auto pe-lg-4">
+            <li class="nav-item">
+              <a href="{% url 'home' %}" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'game:pong' %}" class="nav-link">Pong</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'game:pong-local' %}" class="nav-link">L-Pong</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'chat:chat-room' %}" class="nav-link">ChatRoom</a>
+            </li>
+            <li class="nav-item">
+              <a href="{% url 'user:profile' %}" class="nav-link" id="navProfileButton" hidden>Profile</a>
+            </li>
+
+          </ul>
+          <ul class="navbar-nav ms-lg-5 ps-lg-5">
+            <!-- Dinamik olarak giriş yapmış kullanıcılara gösterilecek çıkış butonu -->
+            <li class="nav-item">
+              <a
+                href="{% url 'user:logout' %}"
+                class="nav-link btn btn-dark btn-logout shadow-sm" id="navLogoutButton" hidden
+                >Logout</a
+              >
+            </li>
+            <!-- Dinamik olarak giriş yapmamış kullanıcılara gösterilecek giriş yap butonu -->
+            <li class="nav-item">
+              <a
+                href="{% url 'user:login' %}"
+                class="nav-link btn btn-dark shadow-sm" id="navLoginButton"
+                >Login</a
+              >
+            </li>
+          </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>

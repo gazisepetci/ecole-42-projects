@@ -1,0 +1,45 @@
+<div class="container-fluid">
+    <div class="row bg-dark rounded text-light shadow">
+        <div class="col-lg py-3">
+            <div class="row border-bottom border-secondary border-2">
+                <h5 role="button" id="chat-room-user-title">
+                    <!-- TARGET USERNAME -->
+                    Chat
+                </h5>
+                <button id="chat-room-invite" class="btn" hidden>Invite</button>
+            </div>
+            <div class="row">
+                <div class="col my-2 overflow-auto"
+                id="chat-room-message-content" style="height: 65vh; max-height: 65vh;">
+                    <!-- MESSAGES -->    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input class="w-100" id="chat-room-message-input">
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 bg-dark-subtle border-top border-5 border-secondary overflow-x-hidden">
+            <div class="row text-secondary-emphasis py-1">
+                <div class="col">
+                    <small class="pe-none" id="chat-room-online-ago">
+                        Last updated at 00:00
+                    </small>
+                    <button class="btn" id="chat-room-online-refresh">
+                        <i class="bi bi-arrow-counterclockwise"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="row text-info-emphasis fw-semibold">
+                <div class="col">
+                    <ul class="px-0" id="chat-room-online-log">
+                        <!-- ONLINE USER LIST -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'eoc.html' %}

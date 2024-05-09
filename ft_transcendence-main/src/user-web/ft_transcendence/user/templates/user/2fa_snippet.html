@@ -1,0 +1,39 @@
+{% for field in form %}
+
+<div class="form-floating mb-4">
+    
+    {% if field.id_for_label == 'id_otp_device' %}
+
+    <select class="form-select bg-transparent text-white" id="{{ field.id_for_label }}"
+    name="{{ field.name }}" type="{{ field.field.widget.input_type }}"
+    aria-label="Two-factor Authentication Device">
+    
+    {% for value, name in form.fields.otp_device.choices %}
+    <option value="{{ value }}" {% if field.value == "{{ value }}" %} selected {% endif %}>{{ name }}</option>
+    {% endfor %}
+
+    </select>
+
+    {% elif field.id_for_label == 'id_otp_challenge' %}
+
+    <!-- OTP Challenge Button for Interactive Devices -->
+
+    {% else %}
+
+    <input class="form-control bg-transparent text-white" id="{{ field.id_for_label }}"
+    name="{{ field.name }}" type="{{ field.field.widget.input_type }}"
+    {% if field.value %}value="{{ field.value }}"{% endif %}
+    {% if field.field.required %}required=""{% endif %}
+    placeholder="x">
+
+    <label class="form-label" for="{{ field.id_for_label }}">
+        <i class="bi bi-lock-fill"></i>
+        {{ field.label }}
+    </label>
+    {% endif %}
+
+
+    {{ field.errors }}
+</div>
+
+{% endfor %}

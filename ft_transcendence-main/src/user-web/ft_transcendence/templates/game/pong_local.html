@@ -1,0 +1,50 @@
+<div class="container-fluid">
+    <div class="row">
+        <div id="webgl" class="position-relative" tabindex="0">
+            <div id="webgl-scoreboard" class="overflow-y-auto overflow-x-hidden position-absolute top-0 end-0
+            p-2 bg-dark rounded border border-2 border-warning"
+                style="height: 25vh; max-height: 25vh; width: 250px; max-width: 250px;">
+                <div class="row justify-content-center text-center text-light">
+                    <h5 class="fw-bolder">Scoreboard</h5>
+                </div>
+                <div class="row text-center text-white-50">
+                    <div class="col">
+                        <h6 class="fw-semibold">Players</h6>
+                    </div>
+                    <div class="col">
+                        <h6 class="fw-semibold">Scores</h6>
+                    </div>
+                </div>
+                <div class="row text-white-50 text-center">
+                    <div class="col" id="local-pong-player-scores">
+                        <!-- Scoreboard content goes here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-1">
+        <textarea class="col" id="pong-message-log" rows="18" readonly
+            style='background-color:transparent !important;'></textarea>
+    </div>
+    <div class="row m-1 mx-auto">
+        <div class="btn-group-vertical" role="group" aria-label="Vertical radio toggle button group">
+            <input type="radio" class="btn-check" name="vbtn-radio" id="1v1-radio" autocomplete="off">
+            <label class="btn btn-outline-warning" for="1v1-radio">1 V 1</label>
+            <input type="radio" class="btn-check" name="vbtn-radio" id="tournament-radio" autocomplete="off">
+            <label class="btn btn-outline-warning" for="tournament-radio">Tournament</label>
+
+            <button type="button" class="btn btn-danger" id="lStartGame">Start Game</button>
+        </div>
+        <div class="text-bg-info mx-auto my-3 p-2 rounded text-center">
+            <div>
+                Each match starts by pressing X button, game can be paused by pressing T button.
+            </div>
+            <div>
+                Player controls: player0 [W,S], player1 [ArrowUp, ArrowDown]
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'eoc.html' %}

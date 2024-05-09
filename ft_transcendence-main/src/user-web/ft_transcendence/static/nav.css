@@ -1,0 +1,24 @@
+.custom-logout-button1 {
+  background-color: transparent; /* Arka planı transparan yap */
+  color: #ffffff; /* Bootstrap 'btn-danger' rengi */
+  border: 1px solid #ffffff; /* Aynı renkte bir çerçeve ekle */
+  transition: all 0.3s; /* Pürüzsüz geçiş efekti */
+}
+
+.custom-logout-button:hover {
+  background-color: #dc3545; /* Hover durumunda arka plan rengini değiştir */
+  color: white; /* Hover durumunda metin rengini değiştir */
+}
+
+.navbar-custom {
+  background: linear-gradient(to right, #52383880, #5a3c3c80) !important;
+  box-shadow: 0 0 100px #fff6f6;
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.navbar-custom2 {
+  background: linear-gradient(to right, #38455220, #5a3c3c60) !important;
+  border-radius: 10px;
+}
+/* Navbar içindeki linkler için ek stil */

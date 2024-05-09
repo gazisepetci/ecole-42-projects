@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-xl-6">
+        <div class="card p-4 bg-transparent" id="2faCard">
+          <div class="card-body">
+            <form action="{% url 'user:two-factor' %}" method="POST" id="2fa-form">
+              <h2 class="mb-5">Two Factor Authentication</h2>
+              {% csrf_token %}
+              {{ form }}
+              <button type="submit" class="btn btn-full btn-dark mb-4" id="2FASubmitButton">
+                Submit
+              </button>
+            </form>
+            
+            {% include 'messages.html' %}
+  
+            <div class="sign-link31 m-0">
+            </div>
+            <div id="form_error"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% include 'eoc.html' %}

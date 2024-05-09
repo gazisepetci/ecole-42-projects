@@ -1,0 +1,5 @@
+pre > .string { color: rgb(19, 204, 19); }
+pre > .number { color: rgb(57, 192, 255); }
+pre > .boolean { color: rgb(255, 106, 255); }
+pre > .null { color: rgb(255, 163, 50); }
+pre > .key { color: rgb(255, 158, 158); }

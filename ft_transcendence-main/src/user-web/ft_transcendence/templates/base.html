@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Dashboard{% endblock %}</title>
+    <meta name="author" content="bcayir, buyildir, gsepetci, hkok, tcakmako" />
+    <meta
+      name="description"
+      content="{% block description %}Ecole 42 Ft_transcendence Project{% endblock %}"
+    />
+    <meta
+      name="keywords"
+      content="{% block keywords %}game, pingpong{% endblock %}"
+    />
+    {% load static %}
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "{% static 'game/three.module.js' %}",
+          "three-css2drenderer": "{% static 'game/CSS2DRenderer.js' %}"
+        }
+      }
+    </script>
+
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% block favicon %}{% static '42_Logo.png' %}{% endblock %}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <link rel="stylesheet" href="{% static 'global.css' %}" />
+    <link rel="stylesheet" href="{% static 'nav.css' %}" />
+    <link rel="stylesheet" href="{% static 'error.css' %}" />
+    <link rel="stylesheet" href="{% static 'chat/chat.css' %}" />
+    <link rel="stylesheet" href="{% static 'chat/json-highlight.css' %}"/>
+
+    <script defer src="{% static 'game/pong_room.js' %}"></script>
+    <script defer src="{% static 'chat/chat_room.js' %}"></script>
+
+    <script defer type="module" src="{% static 'game/three-pong.js' %}"></script>
+    <script defer type="module" src="{% static 'game/three-pong-local.js' %}"></script>
+    <script defer src="{% static 'game/LocalPongGameLogic.js' %}"></script>
+
+    <script defer src="{% static 'cookieHandler.js' %}"></script>
+    <script defer src="{% static 'user/sessionNavigator.js' %}"></script>
+    <script defer src="{% static 'fetchWithJWT.js' %}"></script>
+    <script defer src="{% static 'binders.js' %}"></script>
+    <script defer src="{% static 'spa.js' %}"></script>
+    <script defer src="{% static 'user/submitForm.js' %}"></script>
+    <script defer src="{% static 'user/profile.js' %}"></script>
+    
+    <script defer src="{% static 'home/online_status.js' %}"></script>
+
+  </head>
+  <body>
+    <div id="content">
+      {% block content %}Hello World! This is base.html{% endblock %}
+    </div>
+
+    <div id="toast-content" class="toast-container position-fixed bottom-0 end-0 p-3">
+    </div>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<div class="container-fluid">
+    <div class="row">
+        <div id="webgl" class="position-relative" tabindex="0">
+            <div id="webgl-scoreboard"
+            class="overflow-y-auto overflow-x-hidden position-absolute top-0 end-0
+            p-2 bg-dark rounded border border-2 border-warning"
+            style="height: 25vh; max-height: 25vh; width: 250px; max-width: 250px;">
+                <div class="row justify-content-center text-center text-light">
+                    <h5 class="fw-bolder">Scoreboard</h5>
+                </div>
+                <div class="row text-center text-white-50">
+                    <div class="col">
+                        <h6 class="fw-semibold">Players</h6>
+                    </div>
+                    <div class="col">
+                        <h6 class="fw-semibold">Scores</h6>
+                    </div>
+                </div>
+                <div class="row text-white-50 text-center">
+                    <div class="col" id="pong-player-scores">
+                        <!-- Scoreboard content goes here -->
+                        <div class="row">
+                            <!-- First player -->
+                            <div class="col">
+                                mrOwner <span class="position-absolute start-50 text-warning"><i class="bi bi-star-fill"></i></span>
+                            </div>
+                            <div class="col">
+                                <div class="row justify-content-between">
+                                    <div class="col">1W</div>
+                                    <div class="col">154P</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- Second player -->
+                            <div class="col">
+                                Bazooka
+                            </div>
+                            <div class="col">
+                                <div class="row justify-content-between">
+                                    <div class="col">3W</div>
+                                    <div class="col">527P</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-1">
+        <textarea
+        class="col text-light text-opacity-75 bg-dark bg-opacity-25"
+        id="pong-message-log"
+        style="height:50vh;"
+        readonly></textarea>
+    </div>
+    <div class="row m-1">
+        <input class="col-10" id="pong-message-input" type="text" placeholder="Message">
+        <input class="col-2 btn btn-info" id="pong-message-submit" type="button" value="Send">
+    </div>
+    <div class="row m-1">
+        <input class="col-3" id="pong-room-input" type="text" placeholder="Room name">
+        <input class="col-2 btn btn-success" id="pong-room-connect" type="button" value="Connect">
+        <input class="col-2 btn btn-danger" id="pong-room-disconnect" type="button" value="Disconnect">
+        <input class="col-2 btn btn-warning" id="pong-room-ready" type="button" value="Toggle Ready">
+        <input class="col-1 ms-2" id="pong-room-move-up" type="button" value="↑" hidden>
+        <input class="col-1" id="pong-room-move-down" type="button" value="↓" hidden>
+        <input class="col btn btn-light" id="pong-room-switch-type" type="button" value="Switch Type">
+    </div>
+    <div class="row m-1">
+        <textarea class="col" id="pong-ping-log" rows="20" readonly></textarea>
+        <div class="bg-dark text-light col" id="pong-player1-log"></div>
+        <div class="bg-dark text-light col" id="pong-player2-log"></div>
+    </div>
+</div>
+
+{% include 'eoc.html' %}

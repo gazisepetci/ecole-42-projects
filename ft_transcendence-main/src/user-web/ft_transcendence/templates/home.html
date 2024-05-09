@@ -1,0 +1,90 @@
+{% if user.is_authenticated %}
+<div class="container-fluid h-100">
+    <div class="row justify-content-center h-100">
+        <div class="col-md-4 col-xl-3 chat">
+            <div class="card contacts-card">
+                <div class="card-header">
+                    <h4 class="text-light fw-light my-1">
+                        Friends
+                    </h4>
+                </div>
+                <div class="card-body px-3 contacts_body">
+                    <ul id="home-friend-list" class="contacts">
+                        {% for friend_user in friends %}
+                        <li id="home-friend-list-item-{{ friend_user.username }}">
+                            <div class="d-flex bd-highlight">
+                                <div class="img_cont">
+                                    <img src="{% url 'user:get-user-image' user_id=friend_user.id %}" class="rounded-circle user_img">
+                                    <span class="online_icon"></span>
+                                </div>
+                                <div class="user_info">
+                                    <a
+                                    class="link-light link-underline link-underline-opacity-0"
+                                    href="{% url 'user:target-profile' target_id=friend_user.id %}">
+                                        {{ friend_user.username }}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8 col-xl-6 chat">
+            <div class="card contacts-card">
+                <div class="card-header msg_head">
+                    <h4 class="fw-light text-light my-1">
+                        Friend Requests
+                    </h4>
+                </div>
+                <div class="card-body overflow-x-hidden overflow-y-auto">
+                    {% if incoming|length > 0 %}
+                    <ul class="list-group list-group-flush text-end">
+                        {% for pending_user in incoming %}
+                        <li class="list-group-item text-light bg-transparent">
+                            <a
+                            class="link-info link-underline link-underline-opacity-0"
+                            href="{% url 'user:target-profile' target_id=pending_user.id %}">
+                                {{ pending_user.username }}
+                            </a>
+                            has sent you a friend request.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <span>You have no incoming friend requests.</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+{% else %}
+<div class="text-center">
+    <h1 class="display-3 white-glow light-text-gradient mb-5">Welcome to Transcendence</h1>
+</div>
+
+<div style="max-width:65%;">
+    <div style="position:relative; width:100%; height:0px; padding-bottom:56.175%">
+        <iframe
+        class="shadow-lg"
+        allow="fullscreen;autoplay" allowfullscreen="" height="100%"
+        src="https://streamable.com/e/paag0y?autoplay=1&amp;muted=1&amp;nocontrols=1"
+        width="100%"
+        style="width:100%; height:100%; position:absolute; left:0px; top:0px; overflow:hidden; webkit-border-radius: 20px;-moz-border-radius: 20px;border-radius: 20px;">
+        </iframe>
+    </div>
+</div>
+
+{% endif %}
+<div class="text-center">
+    <button
+    class="btn btn-light m-5 shadow"
+    id="dummyButton"
+    onclick="fetch('{% url 'user:dummy-scores' %}', {method: 'PUT'}); return false;">
+        Create Dummies
+    </button>
+</div>
+
+{% include 'eoc.html' %}

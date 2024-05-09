@@ -1,0 +1,390 @@
+<div class="container-lg">
+  <div class="row">
+    <section>
+      <div class="container py-5">
+        <div class="row">
+          <!-- BEGIN::PROFILE VIEW LEFT SIDE -->
+          <div class="col-lg-4">
+            <div class="card mb-4 l-bg-cherry">
+              <div class="card-body text-center">
+                <img
+                  src="{% url 'user:get-user-image' user_id=target_user.pk %}"
+                  alt="avatar"
+                  class="rounded-circle img-fluid"
+                  style="width: 150px"
+                />
+                <h5 id="targetUsername">{{ target_user.username }}</h5>
+                <div class="d-flex justify-content-center mb-2">
+                  <!-- User relationship button(s), only visible if viewing other profile -->
+                  {% if user.pk != target_user.pk %}
+
+                  {% if relationship == "none" %}
+                  <button id="add-friend-button" type="button" class="btn btn-outline-primary me-2">Add Friend</button>
+                  <button id="block-user-button" type="button" class="btn btn-outline-danger">Block</button>
+                  {% elif relationship == "receiving" %}
+                  <button id="add-friend-button" type="button" class="btn btn-outline-success me-2">Accept Friend Request</button>
+                  <button id="del-friend-button" type="button" class="btn btn-outline-warning me-2">Decline</button>
+                  <button id="block-user-button" type="button" class="btn btn-outline-danger">Block</button>
+                  {% elif relationship == "sent" %}
+                  <button id="del-friend-button" type="button" class="btn btn-outline-secondary me-2">Sent Friend Request</button>
+                  <button id="block-user-button" type="button" class="btn btn-outline-danger">Block</button>
+                  {% elif relationship == "friend" %}
+                  <button id="del-friend-button" type="button" class="btn btn-outline-warning me-2">Remove friend</button>
+                  <button id="block-user-button" type="button" class="btn btn-outline-danger">Block</button>
+                  {% elif relationship == "blocking" %}
+                  <button id="unblock-user-button" type="button" class="btn btn-outline-danger">Unblock</button>
+                  {% elif relationship == "blocked" %}
+                  <button id="block-user-button" type="button" class="btn btn-outline-danger">Block</button>
+                  {% endif %}
+
+                  {% else %}
+                  <!-- Edit Profile Button, only visible if viewing own profile -->
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger ms-1"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editProfile"
+                  >
+                    <i class="bi bi-pencil-square"></i>
+                    Edit Profile
+                  </button>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+
+<!-- Add Friend Modal -->
+<div class="modal fade" id="addFriendModal" tabindex="-1" aria-labelledby="addFriendModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addFriendModalLabel">Add Friend</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Form for adding friend -->
+        <form id="friendRequestForm">
+			<input type="text" id="friendUsername" placeholder="Enter username to add" required>
+			<button type="submit">Send Friend Request</button>
+		</form>
+		<div id="responseMessage"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+          <!-- END::PROFILE VIEW LEFT SIDE -->
+          <!-- BEGIN::PROFILE VIEW RIGHT SIDE -->
+          <div class="col-lg-8">
+            <div class="card mb-4 l-bg-cherry">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="text-danger mb-0">Username</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p class="mb-0">{{ target_user.username }}</p>
+                  </div>
+                </div>
+                <hr />
+                {% if user.pk == target_user.pk %}
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="text-danger mb-0">Email</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p class="mb-0">{{ target_user.email }}</p>
+                  </div>
+                </div>
+                <hr />
+                {% endif %}
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="text-danger mb-0">One vs One</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <div class="row justify-content-between">
+                      <div class="col">
+                        Total: {{ summary.onevsone.total }}
+                      </div>
+                      <div class="col">
+                        Wins: {{ summary.onevsone.wins }}
+                      </div>
+                      <div class="col">
+                        Losses: {{ summary.onevsone.losses }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="text-danger mb-0">Tournament</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <div class="row justify-content-between">
+                      <div class="col">
+                        Total: {{ summary.tournament.total }}
+                      </div>
+                      <div class="col">
+                        1st: {{ summary.tournament.first }}
+                      </div>
+                      <div class="col">
+                        2nd: {{ summary.tournament.second }}
+                      </div>
+                      <div class="col">
+                        3rd: {{ summary.tournament.third }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+              </div>
+            </div>
+          </div>
+          <!-- END::PROFILE VIEW RIGHT SIDE -->
+          <!-- BEGIN::PROFILE VIEW ACCORDION -->
+
+          {% if ranking|length == 0 %}
+          <div role="alert" class="alert alert-warning">
+            No matches has been recorded for player {{ target_user.username }}
+          </div>
+          {% endif %}
+
+          <div class="accordion" id="profileAccordion">
+            {% for game in ranking %}
+
+            <div class="accordion-item l-bg-cherry">
+              <h2 class="accordion-header l-bg-cherry">
+                <button
+                  class="accordion-button d-block text-center d-block text-center l-bg-cherry text-danger collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  data-bs-target="#collapse_{{ game.id }}"
+                  aria-expanded="false"
+                  aria-controls="collapse_{{ game.id }}"
+                >
+                <div class="container text-center">
+                  <div class="row" style="color:white;">
+                    <div class="col justify-content-between" style="text-align: left;">
+                      {% if game.type == "TOURNAMENT" %}
+                          Tournament
+                      {% else %}
+                          One vs One
+                      {% endif %}
+                    </div>
+                    <div class="col justify-content-between">
+                      {% if game.type == "TOURNAMENT" %}
+                      {% if game.target_player.place == 1 %}
+                        <span class="badge bg-warning">PLACED AT {{ game.target_player.place }}</span>
+                      {% elif game.target_player.place == 2 %}
+                      <span class="badge bg-secondary">PLACED AT {{ game.target_player.place }}</span>
+                      {% elif game.target_player.place == 3 %}
+                        <span class="badge" style="background-color: #CD7F32;">PLACED AT {{ game.target_player.place }}</span>
+                      {% else %}
+                        <span class="badge" style="background-color: #8C2C3C;">PLACED AT {{ game.target_player.place }}</span>
+                      {% endif %}
+                  {% else %}
+                      {% if game.target_player.has_won %}
+                        <span class="badge bg-success">V I C T O R Y</span>
+                      {% else %}
+                        <span class="badge bg-danger">D E F E A T</span>
+                      {% endif %}
+                  {% endif %}
+                    </div>
+                    <div class="col justify-content-between" style="color:cadetblue; text-align: right;">
+                      <span>{{ game.date }}</span>
+                    </div>
+                  </div>
+                </div>
+                </button>
+              </h2>
+              <div
+                id="collapse_{{ game.id }}"
+                class="accordion-collapse collapse"
+                data-bs-parent="#profileAccordion"
+                style="backdrop-filter: blur(10px);"
+              >
+                <div class="accordion-body">
+                  <ul>
+                    {% if game.type == "TOURNAMENT" %}
+                      <span>Game Mode : Tournament</span>
+                    {% else %}
+                      <span>Game Mode : 1v1</span>
+                    {% endif %}
+                    <br>
+                    {% for player in game.players %}
+                      {% if player.id != "null" %}
+                      <a href="{% url 'user:target-profile' target_id=player.id %}" 
+                      style="font-weight: 400; color: #4caf50; transition: font-weight 0.3s, 
+                      color 0.3s; text-decoration: none;" onmouseover="this.style.fontWeight='600'; 
+                      this.style.color='#2e7d32';" onmouseout="this.style.fontWeight='400'; 
+                      this.style.color='#4caf50';">{{ player.username }}</a>
+
+
+                      {% else %}
+                      <a href="/home/" style="font-weight: 400; color: #4caf50; transition: font-weight 0.3s, 
+                      color 0.3s; text-decoration: none;" onmouseover="this.style.fontWeight='600'; 
+                      this.style.color='#2e7d32';" onmouseout="this.style.fontWeight='400'; 
+                      this.style.color='#4caf50';">{{ player.username }}</a>
+                      {% endif %}
+                      's status : 
+                      <br>
+                      Total Score [{{ player.total_score }}] and Wins [{{ player.wins }}]
+                      <br>
+                    {% endfor %}
+                    
+                  </ul>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <!-- END::PROFILE VIEW ACCORDION -->
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- BEGIN::EDIT PROFILE MODAL -->
+<div
+  class="modal fade"
+  id="editProfile"
+  tabindex="-1"
+  aria-labelledby="editProfileLabel"
+  aria-hidden="true"
+  data-bs-theme="dark"
+>
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editProfileLabel" style="color:#fff;">Edit Profile</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          style="background-color: rgba(255, 255, 255, 0.171)"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- Profile Photo Update Form -->
+        <form id="profilePhotoForm" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="profilePhoto" class="form-label" style="color:#fff;">Profile Photo</label>
+            <input
+              type="file"
+              class="form-control"
+              id="profilePhoto"
+              name="profilePhoto"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary mb-3">Save Photo</button>
+        </form>
+
+        <!-- Password Update Form -->
+        <form id="passwordForm" class="mt-2">
+          <div class="mb-3">
+            <input type="password" class="form-control" id="oldPassword" placeholder="Current Password" />
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" id="newPassword" placeholder="New Password"/>
+          </div>
+          <div class="mb-3">
+            <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" />
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary mb-3"
+            id="changePassword"
+          >
+            Change Password
+          </button>
+        </form>
+		<!-- Two-Factor Authentication Update Form -->
+		<form id="twoFactorForm" class="mt-2">
+			<div class="mb-3">
+				<label for="twoFactorType" class="form-label" style='color:#fff;'>Two-Factor Authentication</label>
+				<select id="twoFactorType" class="form-select">
+					<option value="0">Disable 2FA</option>
+					<option value="2">Enable Email Verification</option>
+					<option value="3">Enable TOTP</option>
+				</select>
+			</div>
+			<button id="profile-2fa-setting-submit" type="button" class="btn btn-primary mb-3">Update 2FA Setting</button>
+		</form>
+        <!-- Delete Profile Button -->
+        <div>
+          <button
+            type="button"
+            class="btn btn-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteProfileModal"
+          >
+            Delete Profile
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- END::EDIT PROFILE MODAL -->
+
+<!-- Delete Profile Confirmation Modal -->
+<div
+  class="modal fade"
+  id="deleteProfileModal"
+  tabindex="-1"
+  aria-labelledby="deleteProfileModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteProfileModalLabel">
+          Confirm Profile Deletion
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete your profile? This action cannot be
+        undone.
+        <div class="text-bg-warning p-2 rounded">
+          <small>All of your personal information will be deleted from our database. Your username in game history will be anonymized.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+          id="deleteProfile"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- END::EDIT PROFILE MODAL -->
+
+{% include 'eoc.html' %}
